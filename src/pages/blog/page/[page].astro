@@ -1,0 +1,28 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BlogArchive from '../../../components/BlogArchive.astro';
+import Layout from '../../../layouts/Layout.astro';
+import { getBlogs, type BlogPagination } from '../../../lib/blogApi';
+
+export const getStaticPaths = (async () => {
+	const firstPage = await getBlogs({ page: 1, perPage: 9 });
+
+	return Array.from({ length: Math.max(firstPage.last_page - 1, 0) }, (_, index) => {
+		const page = index + 2;
+
+		return {
+			params: { page: String(page) },
+		};
+	});
+}) satisfies GetStaticPaths;
+
+const page = Number(Astro.params.page ?? '1');
+const blogs: BlogPagination = await getBlogs({ page, perPage: 9 });
+---
+
+<Layout
+	title={`Blog Halaman ${page} - Pondok Pesantren Mambaul Hikmah`}
+	description="Berita dan artikel terbaru Pondok Pesantren Mambaul Hikmah Tegalwangi."
+>
+	<BlogArchive blogs={blogs} />
+</Layout>
