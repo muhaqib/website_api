@@ -1,11 +1,1149 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import logo from '../assets/logo.png';
+import banner1 from '../assets/images/Banner1.png';
+import banner2 from '../assets/images/Banner2.jpg';
+import banner3 from '../assets/images/Banner3.jpg';
+import banner4 from '../assets/images/Banner4.jpg';
+import logoMA from '../assets/images/LogoMA.png';
+import logoMI from '../assets/images/LogoMI.png';
+import logoMTS from '../assets/images/LogoMTS.png';
+import logoPAUD from '../assets/images/LogoPAUD.png';
+import logoRA from '../assets/images/LogoRA.png';
+import logoSTIT from '../assets/images/LogoSTIT.PNG';
+import logoULYA from '../assets/images/LogoULYA.png';
+import { formatBlogDate, getBlogImageUrl, getLatestBlogs } from '../lib/blogApi';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const banners = [
+	{ image: banner1, label: 'Santri Pondok Pesantren Mambaul Hikmah' },
+	{ image: banner2, label: "Kegiatan belajar Al-Qur'an santri" },
+	{ image: banner4, label: 'Masjid Pondok Pesantren Mambaul Hikmah' },
+	{ image: banner3, label: 'Silaturahmi dan pembinaan asatidz' },
+];
+
+const missions = [
+	'Membiasakan ibadah wajib dan sunnah.',
+	'Membimbing ibadah sesuai ajaran Rasulullah.',
+	"Mengajarkan Al-Qur'an dan kitab salaf.",
+	'Membentuk kebiasaan berperilaku terpuji.',
+];
+
+const programs = [
+	{
+		title: "Al-Qur'an",
+		text: 'Tahsin, tahfidz, murajaah, dan pembiasaan adab bersama Al-Qur’an.',
+	},
+	{
+		title: 'Kitab Salaf',
+		text: 'Penguatan fikih, akidah, akhlak, dan dasar keilmuan Islam klasik.',
+	},
+	{
+		title: 'Akhlak Santri',
+		text: 'Pendampingan karakter melalui adab harian, asrama, dan keteladanan.',
+	},
+	{
+		title: 'Kemandirian',
+		text: 'Latihan disiplin, tanggung jawab, organisasi, dan kepedulian sosial.',
+	},
+];
+
+const units = [
+	{ name: 'STIT Mambaul Hikmah', level: 'Perguruan Tinggi', logo: logoSTIT },
+	{ name: 'MA Mambaul Hikmah', level: 'Madrasah Aliyah', logo: logoMA },
+	{ name: 'MTs Mambaul Hikmah', level: 'Madrasah Tsanawiyah', logo: logoMTS },
+	{ name: 'MI Mambaul Hikmah', level: 'Madrasah Ibtidaiyah', logo: logoMI },
+	{ name: 'Ulya Mambaul Hikmah', level: 'Pendidikan Diniyah', logo: logoULYA },
+	{ name: 'RA Mambaul Hikmah', level: 'Raudhatul Athfal', logo: logoRA },
+	{ name: 'PAUD Mambaul Hikmah', level: 'Pendidikan Anak Usia Dini', logo: logoPAUD },
+];
+
+const latestBlogs = await getLatestBlogs(3);
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+	title="Pondok Pesantren Mambaul Hikmah Tegalwangi"
+	description="Website profil resmi Pondok Pesantren Mambaul Hikmah Tegalwangi, Talang, Kabupaten Tegal."
+>
+	<main id="home">
+		<section class="hero">
+			<div class="hero-slider" aria-label="Banner kegiatan Pondok Pesantren Mambaul Hikmah">
+				{banners.map((banner, index) => (
+					<Image
+						src={banner.image}
+						alt={banner.label}
+						loading={index === 0 ? 'eager' : 'lazy'}
+						decoding="async"
+						class={`hero-slide slide-${index + 1}`}
+					/>
+				))}
+			</div>
+
+			<div class="hero-overlay"></div>
+			<div class="sanctuary-glow glow-one"></div>
+			<div class="sanctuary-glow glow-two"></div>
+
+			<div class="hero-content reveal intro">
+				<p class="eyebrow">Website Profil Resmi</p>
+				<h1>Selamat Datang di Pondok Pesantren Mambaul Hikmah</h1>
+				<p class="hero-subtitle">
+					Membentuk santri yang Beriman, Bertakwa, Berilmu, dan Berakhlak.
+				</p>
+				<div class="hero-actions">
+					<a class="btn btn-primary btn-large" href="#daftar">Daftar Sekarang</a>
+					<a class="btn btn-soft btn-large" href="#profil">Pelajari Selengkapnya</a>
+				</div>
+			</div>
+
+			<div class="hero-panel reveal intro delay-2">
+				<Image src={logo} width={96} height={96} alt="" loading="eager" />
+				<div>
+					<span class="panel-label">Motto Pesantren</span>
+					<strong>Ilmu, Amal, Tazkiyah</strong>
+				</div>
+			</div>
+		</section>
+
+		<section class="section profile-section" id="profil">
+			<div class="section-media reveal">
+				<Image src={banner4} alt="Masjid Pondok Pesantren Mambaul Hikmah" loading="lazy" />
+				<div class="media-badge">
+					<span>Desa Tegalwangi</span>
+					<strong>Talang, Kabupaten Tegal</strong>
+				</div>
+			</div>
+
+			<div class="section-copy reveal delay-1">
+				<p class="eyebrow">Profil & Lokasi Strategis</p>
+				<h2>Ruang tumbuh santri yang tenang, terarah, dan mudah dijangkau.</h2>
+				<p>
+					Pondok Pesantren Mambaul Hikmah terletak di Desa Tegalwangi, Kecamatan Talang,
+					Kabupaten Tegal. Letaknya yang strategis dan mudah dijangkau menjadikan pesantren
+					ini berkembang sebagai lembaga pendidikan Islam yang tidak hanya berfokus pada ilmu
+					agama, tetapi juga pembentukan karakter santri.
+				</p>
+				<div class="stats-grid">
+					<div>
+						<strong>24 Jam</strong>
+						<span>Pembinaan pesantren</span>
+					</div>
+					<div>
+						<strong>7 Unit</strong>
+						<span>Pendidikan terpadu</span>
+					</div>
+					<div>
+						<strong>3 Pilar</strong>
+						<span>Ilmu, amal, tazkiyah</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="vision-section" id="visi">
+			<div class="vision-head reveal">
+				<p class="eyebrow">Visi, Misi, & Motto</p>
+				<h2>Ketertiban ilmu, kelembutan adab, dan kejernihan hati.</h2>
+			</div>
+
+			<div class="vision-grid">
+				<article class="vision-card featured reveal">
+					<span>Visi</span>
+					<h3>Membentuk santri yang Beriman, Bertakwa, Berilmu, dan Berakhlak.</h3>
+				</article>
+
+				<article class="vision-card mission reveal delay-1">
+					<span>Misi</span>
+					<ul>
+						{missions.map((mission) => <li>{mission}</li>)}
+					</ul>
+				</article>
+
+				<article class="vision-card motto reveal delay-2">
+					<span>Motto</span>
+					<h3>Ilmu, Amal, Tazkiyah</h3>
+					<p>Ilmu yang diamalkan, amal yang menyucikan, dan adab yang menenteramkan.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="section program-section" id="program">
+			<div class="program-video" aria-hidden="true">
+				<iframe
+					src="https://www.youtube.com/embed/4YVCKgbmCjs?autoplay=1&mute=1&loop=1&playlist=4YVCKgbmCjs&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1"
+					title="Video latar Program Pendidikan"
+					allow="autoplay; encrypted-media; picture-in-picture"
+					tabindex="-1"
+				></iframe>
+			</div>
+			<div class="section-heading reveal">
+				<p class="eyebrow">Program Pendidikan</p>
+				<h2>Kurikulum pesantren yang membangun pondasi agama dan karakter.</h2>
+			</div>
+
+			<div class="program-grid">
+				{programs.map((program, index) => (
+					<article class={`program-card reveal delay-${(index % 3) + 1}`}>
+						<span>0{index + 1}</span>
+						<h3>{program.title}</h3>
+						<p>{program.text}</p>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="section units-section" id="unit">
+			<div class="section-heading reveal">
+				<p class="eyebrow">Unit Pendidikan</p>
+				<h2>Jalur pendidikan berjenjang dalam satu ekosistem pesantren.</h2>
+				<p>
+					Setiap unit didesain sebagai lapisan pembinaan yang saling menguatkan, dari usia dini
+					hingga pendidikan tinggi.
+				</p>
+			</div>
+
+			<div class="unit-grid">
+				{units.map((unit, index) => (
+					<article class={`unit-card reveal delay-${(index % 3) + 1}`}>
+						<Image src={unit.logo} alt={`Logo ${unit.name}`} loading="lazy" decoding="async" />
+						<div>
+							<h3>{unit.name}</h3>
+							<p>{unit.level}</p>
+						</div>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="section blog-section" id="berita">
+			<div class="section-heading reveal">
+				<p class="eyebrow">Blog & Berita Terbaru</p>
+				<h2>Catatan kegiatan dan informasi pesantren.</h2>
+			</div>
+
+			<div class="blog-grid">
+				{latestBlogs.length > 0 ? (
+					latestBlogs.map((post, index) => (
+						<article class={`blog-card reveal delay-${(index % 3) + 1}`}>
+							{getBlogImageUrl(post.thumbnail) ? (
+								<Image
+									src={getBlogImageUrl(post.thumbnail) ?? ''}
+									width={1200}
+									height={675}
+									alt=""
+									loading="lazy"
+									decoding="async"
+								/>
+							) : (
+								<div class="blog-placeholder">MH</div>
+							)}
+							<div>
+								<span>{formatBlogDate(post.created_at)}</span>
+								<h3>{post.title}</h3>
+								<p>{post.excerpt}</p>
+								<a href={`/blog/${post.slug}`}>Baca Selengkapnya</a>
+							</div>
+						</article>
+					))
+				) : (
+					<div class="empty-blog reveal">
+						<h3>Belum ada berita terbaru.</h3>
+						<p>Artikel yang sudah dipublikasikan dari smart.mambaulhikmah.com akan tampil di sini.</p>
+						<a href="/blog">Buka Halaman Blog</a>
+					</div>
+				)}
+			</div>
+		</section>
+
+		<section class="cta-section reveal" id="daftar">
+			<div>
+				<p class="eyebrow">Penerimaan Santri Baru</p>
+				<h2>Mari bergabung bersama keluarga besar Mambaul Hikmah.</h2>
+				<p>
+					Dapatkan informasi pendaftaran, kunjungan pondok, serta konsultasi pilihan unit
+					pendidikan melalui admin pesantren.
+				</p>
+			</div>
+			<a class="btn btn-gold btn-large" href="#kontak">Hubungi Admin</a>
+		</section>
+	</main>
+
 </Layout>
+
+<style>
+	:global(*) {
+		box-sizing: border-box;
+	}
+
+	:global(html) {
+		scroll-behavior: smooth;
+	}
+
+	:global(body) {
+		margin: 0;
+		min-width: 320px;
+		color: #191c1d;
+		background: #f8fafa;
+		font-family:
+			Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		text-rendering: optimizeLegibility;
+	}
+
+	:global(a) {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	:global(img) {
+		display: block;
+		max-width: 100%;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 40px;
+		padding: 0 16px;
+		border-radius: 12px;
+		font-size: 0.84rem;
+		font-weight: 900;
+		transition:
+			transform 180ms ease,
+			background 180ms ease,
+			color 180ms ease;
+	}
+
+	.btn:hover {
+		transform: translateY(-2px);
+	}
+
+	.btn-primary {
+		background: #004d4c;
+		color: #ffffff;
+	}
+
+	.btn-soft {
+		background: rgba(162, 240, 238, 0.88);
+		color: #00504f;
+		backdrop-filter: blur(20px);
+	}
+
+	.btn-ghost {
+		color: #004d4c;
+	}
+
+	.btn-gold {
+		background: #cca73b;
+		color: #211b00;
+	}
+
+	.btn-large {
+		min-height: 46px;
+		padding-inline: 20px;
+	}
+
+	.hero {
+		position: relative;
+		display: grid;
+		min-height: 760px;
+		overflow: hidden;
+		place-items: center;
+		padding: 122px clamp(20px, 6vw, 88px) 62px;
+		background: #004d4c;
+		isolation: isolate;
+	}
+
+	.hero-slider,
+	.hero-slide,
+	.hero-overlay {
+		position: absolute;
+		inset: 0;
+	}
+
+	.hero-slider {
+		z-index: -3;
+		background: #004d4c;
+	}
+
+	.hero-slide {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		opacity: 0;
+		transform: scale(1.06);
+		animation: heroCarousel 24s infinite;
+	}
+
+	.slide-2 {
+		animation-delay: 6s;
+	}
+
+	.slide-3 {
+		animation-delay: 12s;
+	}
+
+	.slide-4 {
+		animation-delay: 18s;
+	}
+
+	.hero-overlay {
+		z-index: -2;
+		background:
+			linear-gradient(90deg, rgba(0, 26, 26, 0.88) 0%, rgba(0, 77, 76, 0.68) 44%, rgba(0, 77, 76, 0.22) 100%),
+			linear-gradient(0deg, rgba(0, 77, 76, 0.72), rgba(0, 77, 76, 0.16));
+	}
+
+	.sanctuary-glow {
+		position: absolute;
+		z-index: -1;
+		border-radius: 999px;
+		filter: blur(4px);
+		opacity: 0.66;
+		pointer-events: none;
+	}
+
+	.glow-one {
+		top: 18%;
+		right: 9%;
+		width: min(34vw, 420px);
+		aspect-ratio: 1;
+		background: radial-gradient(circle, rgba(134, 212, 210, 0.38), transparent 68%);
+		animation: floatOrb 8s ease-in-out infinite alternate;
+	}
+
+	.glow-two {
+		bottom: 8%;
+		left: 8%;
+		width: min(30vw, 360px);
+		aspect-ratio: 1;
+		background: radial-gradient(circle, rgba(204, 167, 59, 0.32), transparent 70%);
+		animation: floatOrb 9s ease-in-out 1.5s infinite alternate-reverse;
+	}
+
+	.hero-content {
+		width: min(100%, 1020px);
+		margin-right: auto;
+		color: #ffffff;
+	}
+
+	.eyebrow {
+		margin: 0 0 12px;
+		color: #86d4d2;
+		font-size: 0.72rem;
+		font-weight: 950;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.hero h1,
+	.section-copy h2,
+	.section-heading h2,
+	.vision-head h2,
+	.cta-section h2 {
+		margin: 0;
+		font-family:
+			Manrope, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+			sans-serif;
+		letter-spacing: -0.035em;
+	}
+
+	.hero h1 {
+		max-width: 980px;
+		font-size: clamp(2.45rem, 5.4vw, 5.2rem);
+		line-height: 1.02;
+		text-wrap: balance;
+	}
+
+	.hero-subtitle {
+		max-width: 620px;
+		margin: 20px 0 0;
+		color: rgba(255, 255, 255, 0.84);
+		font-size: clamp(0.98rem, 1.45vw, 1.18rem);
+		line-height: 1.65;
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 14px;
+		margin-top: 28px;
+	}
+
+	.hero-panel {
+		position: absolute;
+		right: clamp(20px, 6vw, 88px);
+		bottom: clamp(20px, 6vw, 72px);
+		display: flex;
+		align-items: center;
+		gap: 18px;
+		width: min(360px, calc(100% - 40px));
+		padding: 16px;
+		border-radius: 24px;
+		background: rgba(248, 250, 250, 0.82);
+		box-shadow: 0 24px 52px -26px rgba(25, 28, 29, 0.4);
+		backdrop-filter: blur(20px);
+	}
+
+	.hero-panel img {
+		width: 62px;
+		height: 62px;
+		object-fit: contain;
+	}
+
+	.panel-label {
+		display: block;
+		margin-bottom: 4px;
+		color: #596465;
+		font-size: 0.76rem;
+		font-weight: 900;
+		text-transform: uppercase;
+	}
+
+	.hero-panel strong {
+		color: #004d4c;
+		font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+	}
+
+	.section,
+	.vision-section,
+	.cta-section {
+		padding-inline: clamp(20px, 6vw, 88px);
+	}
+
+	.section {
+		padding-block: clamp(58px, 7vw, 96px);
+	}
+
+	.profile-section {
+		display: grid;
+		grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+		gap: clamp(34px, 7vw, 86px);
+		align-items: center;
+		background: #f8fafa;
+	}
+
+	.section-media {
+		position: relative;
+	}
+
+	.section-media img {
+		width: 100%;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+		border-radius: 32px;
+		box-shadow: 0 34px 70px -46px rgba(25, 28, 29, 0.42);
+	}
+
+	.media-badge {
+		position: absolute;
+		right: 20px;
+		bottom: 20px;
+		max-width: 260px;
+		padding: 18px;
+		border-radius: 20px;
+		background: rgba(255, 255, 255, 0.78);
+		backdrop-filter: blur(20px);
+	}
+
+	.media-badge span,
+	.media-badge strong {
+		display: block;
+	}
+
+	.media-badge span {
+		color: #596465;
+		font-size: 0.78rem;
+		font-weight: 900;
+	}
+
+	.media-badge strong {
+		margin-top: 5px;
+		color: #004d4c;
+		font-size: 1rem;
+		line-height: 1.35;
+	}
+
+	.section-copy h2,
+	.section-heading h2,
+	.vision-head h2,
+	.cta-section h2 {
+		color: #004d4c;
+		font-size: clamp(1.7rem, 3.1vw, 2.85rem);
+		line-height: 1.12;
+		text-wrap: balance;
+	}
+
+	.section-copy p,
+	.section-heading p,
+	.cta-section p,
+	.cta-section p {
+		color: #465354;
+		font-size: clamp(0.94rem, 1.1vw, 1rem);
+		line-height: 1.75;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		margin-top: 28px;
+	}
+
+	.stats-grid div {
+		padding: 20px;
+		border-radius: 20px;
+		background: #f2f4f4;
+	}
+
+	.stats-grid strong,
+	.stats-grid span {
+		display: block;
+	}
+
+	.stats-grid strong {
+		color: #004d4c;
+		font-size: clamp(1.15rem, 1.9vw, 1.55rem);
+	}
+
+	.stats-grid span {
+		margin-top: 8px;
+		color: #596465;
+		font-size: 0.88rem;
+		font-weight: 750;
+	}
+
+	.vision-section {
+		padding-block: clamp(58px, 7vw, 96px);
+		background: #f2f4f4;
+	}
+
+	.vision-head {
+		max-width: 850px;
+		margin-bottom: 34px;
+	}
+
+	.vision-grid {
+		display: grid;
+		grid-template-columns: 1.1fr 1fr 0.88fr;
+		gap: 18px;
+		align-items: stretch;
+	}
+
+	.vision-card {
+		padding: clamp(24px, 4vw, 38px);
+		border-radius: 28px;
+		background: #ffffff;
+	}
+
+	.vision-card span {
+		display: inline-flex;
+		margin-bottom: 18px;
+		color: #006766;
+		font-size: 0.78rem;
+		font-weight: 950;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.vision-card h3 {
+		margin: 0;
+		color: #004d4c;
+		font-family:
+			Manrope, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+			sans-serif;
+		font-size: clamp(1.45rem, 2.45vw, 2.3rem);
+		line-height: 1.12;
+		letter-spacing: -0.035em;
+	}
+
+	.featured {
+		background: linear-gradient(135deg, #004d4c, #006766);
+	}
+
+	.featured span,
+	.featured h3 {
+		color: #ffffff;
+	}
+
+	.mission ul {
+		display: grid;
+		gap: 16px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.mission li {
+		padding: 14px 16px;
+		border-radius: 16px;
+		background: #f2f4f4;
+		color: #344142;
+		font-weight: 750;
+		line-height: 1.55;
+	}
+
+	.motto {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		background: #e6e8e8;
+	}
+
+	.motto h3 {
+		color: #755b00;
+		font-style: italic;
+	}
+
+	.motto p {
+		margin: 24px 0 0;
+		color: #465354;
+		line-height: 1.8;
+	}
+
+	.blog-section {
+		background: #f8fafa;
+	}
+
+	.program-section {
+		position: relative;
+		overflow: hidden;
+		background: #061b1b;
+		isolation: isolate;
+	}
+
+	.program-section::after {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		content: "";
+		background:
+			radial-gradient(circle at 18% 18%, rgba(134, 212, 210, 0.18), transparent 28%),
+			linear-gradient(90deg, rgba(2, 20, 20, 0.88), rgba(2, 20, 20, 0.72)),
+			rgba(0, 0, 0, 0.52);
+		pointer-events: none;
+	}
+
+	.program-video {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		overflow: hidden;
+		background: #061b1b;
+		pointer-events: none;
+	}
+
+	.program-video iframe {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: max(100vw, 177.78vh);
+		height: max(100vh, 56.25vw);
+		border: 0;
+		opacity: 0.58;
+		transform: translate(-50%, -50%);
+	}
+
+	.program-section .section-heading {
+		position: relative;
+		z-index: 1;
+	}
+
+	.program-section .eyebrow,
+	.program-section .section-heading h2 {
+		color: #ffffff;
+	}
+
+	.section-heading {
+		max-width: 860px;
+		margin-bottom: clamp(30px, 5vw, 50px);
+	}
+
+	.program-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 16px;
+	}
+
+	.program-card {
+		position: relative;
+		z-index: 1;
+		min-height: 248px;
+		padding: 24px;
+		border-radius: 28px;
+		background: rgba(248, 250, 250, 0.12);
+		backdrop-filter: blur(18px);
+		transition:
+			transform 220ms ease,
+			background 220ms ease,
+			color 220ms ease;
+	}
+
+	.program-card:hover {
+		transform: translateY(-8px);
+		background: rgba(248, 250, 250, 0.2);
+	}
+
+	.program-card span {
+		display: inline-flex;
+		margin-bottom: 64px;
+		color: #86d4d2;
+		font-weight: 950;
+	}
+
+	.program-card h3 {
+		margin: 0;
+		color: #ffffff;
+		font-size: 1.18rem;
+	}
+
+	.program-card p {
+		margin: 12px 0 0;
+		color: rgba(255, 255, 255, 0.78);
+		line-height: 1.75;
+	}
+
+	.program-card:hover span,
+	.program-card:hover h3,
+	.program-card:hover p {
+		color: #ffffff;
+	}
+
+	.units-section {
+		background: #f2f4f4;
+	}
+
+	.unit-grid {
+		display: grid;
+		grid-template-columns: repeat(7, minmax(132px, 1fr));
+		gap: 14px;
+		overflow-x: auto;
+		padding-bottom: 8px;
+		scroll-snap-type: x proximity;
+	}
+
+	.unit-card {
+		display: grid;
+		min-height: 220px;
+		align-content: space-between;
+		padding: 20px;
+		border-radius: 28px;
+		background: #ffffff;
+		scroll-snap-align: start;
+		transition:
+			transform 220ms ease,
+			background 220ms ease;
+	}
+
+	.unit-card:hover {
+		transform: translateY(-8px);
+		background: #e6e8e8;
+	}
+
+	.unit-card img {
+		width: 78px;
+		height: 78px;
+		object-fit: contain;
+		filter: drop-shadow(0 14px 18px rgba(0, 77, 76, 0.1));
+	}
+
+	.unit-card h3 {
+		margin: 0;
+		color: #004d4c;
+		font-size: 1.05rem;
+		line-height: 1.25;
+	}
+
+	.unit-card p {
+		margin: 8px 0 0;
+		color: #596465;
+		font-size: 0.88rem;
+		font-weight: 750;
+	}
+
+	.blog-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 18px;
+	}
+
+	.blog-card {
+		overflow: hidden;
+		border-radius: 28px;
+		background: #f2f4f4;
+		transition: transform 220ms ease;
+	}
+
+	.blog-card:hover {
+		transform: translateY(-8px);
+	}
+
+	.blog-card img {
+		width: 100%;
+		aspect-ratio: 16 / 10;
+		object-fit: cover;
+	}
+
+	.blog-placeholder {
+		display: grid;
+		width: 100%;
+		aspect-ratio: 16 / 10;
+		place-items: center;
+		background: linear-gradient(135deg, #004d4c, #006766);
+		color: #ffffff;
+		font-size: 2rem;
+		font-weight: 950;
+	}
+
+	.blog-card div {
+		padding: 24px;
+	}
+
+	.blog-card span {
+		color: #006766;
+		font-size: 0.78rem;
+		font-weight: 950;
+	}
+
+	.blog-card h3 {
+		margin: 12px 0 0;
+		color: #004d4c;
+		font-size: 1.12rem;
+		line-height: 1.3;
+	}
+
+	.blog-card p {
+		color: #596465;
+		line-height: 1.75;
+	}
+
+	.blog-card a {
+		display: inline-flex;
+		margin-top: 8px;
+		color: #004d4c;
+		font-weight: 950;
+	}
+
+	.empty-blog {
+		grid-column: 1 / -1;
+		padding: clamp(24px, 4vw, 38px);
+		border-radius: 28px;
+		background: #f2f4f4;
+	}
+
+	.empty-blog h3 {
+		margin: 0;
+		color: #004d4c;
+		font-size: 1.2rem;
+	}
+
+	.empty-blog p {
+		margin: 10px 0 0;
+		color: #596465;
+		line-height: 1.7;
+	}
+
+	.empty-blog a {
+		display: inline-flex;
+		margin-top: 14px;
+		color: #004d4c;
+		font-weight: 950;
+	}
+
+	.cta-section {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 28px;
+		align-items: center;
+		margin: clamp(20px, 6vw, 88px);
+		padding-block: clamp(30px, 4vw, 48px);
+		border-radius: 32px;
+		background:
+			radial-gradient(circle at 82% 18%, rgba(162, 240, 238, 0.34), transparent 28%),
+			linear-gradient(135deg, #004d4c, #006766);
+	}
+
+	.cta-section .eyebrow,
+	.cta-section h2,
+	.cta-section p {
+		color: #ffffff;
+	}
+
+	.cta-section p {
+		max-width: 760px;
+	}
+
+	.reveal {
+		opacity: 0;
+		transform: translateY(34px) scale(0.985);
+		animation: revealUp 860ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+		animation-timeline: view();
+		animation-range: entry 0% cover 32%;
+	}
+
+	.intro {
+		animation-timeline: auto;
+		animation-delay: 180ms;
+	}
+
+	.delay-1 {
+		animation-delay: 120ms;
+	}
+
+	.delay-2 {
+		animation-delay: 240ms;
+	}
+
+	.delay-3 {
+		animation-delay: 360ms;
+	}
+
+	@supports not (animation-timeline: view()) {
+		.reveal {
+			opacity: 1;
+			transform: none;
+			animation-timeline: auto;
+		}
+
+		.intro {
+			animation: revealUp 860ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+		}
+	}
+
+	@keyframes revealUp {
+		from {
+			opacity: 0;
+			transform: translateY(34px) scale(0.985);
+			filter: blur(10px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+			filter: blur(0);
+		}
+	}
+
+	@keyframes heroCarousel {
+		0% {
+			opacity: 0;
+			transform: scale(1.08);
+		}
+		5%,
+		25% {
+			opacity: 1;
+		}
+		31%,
+		100% {
+			opacity: 0;
+			transform: scale(1);
+		}
+	}
+
+	@keyframes floatOrb {
+		from {
+			transform: translate3d(0, 0, 0) scale(1);
+		}
+		to {
+			transform: translate3d(18px, -24px, 0) scale(1.08);
+		}
+	}
+
+	@media (max-width: 1180px) {
+		.profile-section,
+		.vision-grid,
+		.blog-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.program-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 760px) {
+		.hero {
+			align-items: end;
+			min-height: 660px;
+			padding: 104px 20px 24px;
+		}
+
+		.hero h1 {
+			font-size: clamp(2.2rem, 10vw, 3.25rem);
+		}
+
+		.hero-subtitle {
+			font-size: 1rem;
+		}
+
+		.hero-panel {
+			position: relative;
+			right: auto;
+			bottom: auto;
+			margin-top: 26px;
+		}
+
+		.hero-content {
+			margin: 0;
+		}
+
+		.hero-actions,
+		.cta-section {
+			grid-template-columns: 1fr;
+		}
+
+		.hero-actions .btn,
+		.cta-section .btn {
+			width: 100%;
+		}
+
+		.profile-section,
+		.section,
+		.vision-section {
+			padding-block: 54px;
+		}
+
+		.stats-grid,
+		.program-grid,
+		.blog-grid,
+		.cta-section {
+			grid-template-columns: 1fr;
+		}
+
+		.section-media img {
+			aspect-ratio: 1 / 1;
+			border-radius: 26px;
+		}
+
+		.media-badge {
+			right: 14px;
+			bottom: 14px;
+		}
+
+		.program-card {
+			min-height: auto;
+		}
+
+		.program-card span {
+			margin-bottom: 38px;
+		}
+
+		.cta-section {
+			margin: 20px;
+			padding-inline: 24px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			scroll-behavior: auto !important;
+			animation-duration: 1ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 1ms !important;
+		}
+
+		.hero-slide:first-child {
+			opacity: 1;
+		}
+	}
+</style>

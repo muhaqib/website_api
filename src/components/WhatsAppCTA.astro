@@ -1,0 +1,87 @@
+---
+const phone = '+62 813-9375-0612';
+const href =
+	'https://wa.me/6281393750612?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20Pondok%20Pesantren%20Mambaul%20Hikmah.';
+---
+
+<a class="whatsapp-cta" href={href} target="_blank" rel="noreferrer" aria-label={`Chat WhatsApp ${phone}`}>
+	<span class="wa-icon">WA</span>
+	<span class="wa-text">
+		<small>Chat Admin</small>
+	</span>
+</a>
+
+<style>
+	.whatsapp-cta {
+		position: fixed;
+		right: clamp(16px, 3vw, 34px);
+		bottom: clamp(16px, 3vw, 34px);
+		z-index: 60;
+		display: inline-flex;
+		align-items: center;
+		gap: 12px;
+		padding: 10px 14px 10px 10px;
+		border-radius: 999px;
+		background: rgba(0, 77, 76, 0.92);
+		color: #ffffff;
+		box-shadow: 0 24px 48px -24px rgba(25, 28, 29, 0.42);
+		text-decoration: none;
+		backdrop-filter: blur(20px);
+		animation: waFloat 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both 420ms;
+	}
+
+	.wa-icon {
+		display: grid;
+		width: 42px;
+		height: 42px;
+		place-items: center;
+		border-radius: 50%;
+		background: #25d366;
+		color: #ffffff;
+		font-size: 0.78rem;
+		font-weight: 950;
+	}
+
+	.wa-text {
+		display: grid;
+		line-height: 1.1;
+	}
+
+	.wa-text small {
+		color: rgba(255, 255, 255, 0.74);
+		font-size: 0.72rem;
+		font-weight: 800;
+	}
+
+	.wa-text strong {
+		margin-top: 3px;
+		font-size: 0.9rem;
+	}
+
+	.whatsapp-cta:hover {
+		transform: translateY(-2px);
+	}
+
+	@keyframes waFloat {
+		from {
+			opacity: 0;
+			transform: translateY(18px) scale(0.96);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@media (max-width: 620px) {
+		.whatsapp-cta {
+			right: 14px;
+			bottom: 14px;
+			padding: 9px;
+		}
+
+		.wa-text {
+			display: none;
+		}
+	}
+</style>
