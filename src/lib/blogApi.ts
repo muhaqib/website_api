@@ -132,13 +132,48 @@ export function renderBlogContent(content: string | null | undefined) {
 	return content;
 }
 
+const FALLBACK_BLOGS: BlogPost[] = [
+	{
+		id: 6,
+		title: 'Cara Al-Qur’an Menguatkan Nabi Muhammad saat Dakwahnya Ditolak',
+		slug: 'cara-al-quran-menguatkan-nabi-muhammad-saat-dakwahnya-ditolak',
+		excerpt:
+			'Allah mengingatkan bahwa hidayah ada dalam ketetapan-Nya. Nabi hanya bertugas menyampaikan, bukan memaksa hati manusia untuk beriman.',
+		content:
+			'{"type":"blocks","blocks":[{"type":"p","text":"Baginda Nabi Muhammad SAW pernah mengalami kesedihan yang sangat dalam ketika dakwahnya ditolak oleh kaum Quraisy. Bukan hanya ditolak, beliau juga dimusuhi, dihina, dan dituduh dengan berbagai tuduhan yang menyakitkan."},{"type":"quote","text":"Artinya: Tugasmu hanyalah menyampaikan; jangan biarkan kesedihan atas urusan mereka memalingkanmu dari Kami."}]}',
+		thumbnail:
+			'https://smart.mambaulhikmah.com/storage/blogs/thumbnails/2d1cb522-3f73-4ee6-b86a-d00c92320559.webp',
+		category: 'Pendidikan',
+		author: 'Ustadz Noval Ali, Lc',
+		created_at: '2026-06-30T04:32:58.000000Z',
+	},
+	{
+		id: 5,
+		title: 'Mengenal Lingkungan Pembinaan Santri Mambaul Hikmah',
+		slug: 'dalwa',
+		excerpt:
+			'Integrasi kurikulum Al-Qur’an, kitab salaf, dan pendidikan formal untuk mencetak generasi berilmu dan berakhlak.',
+		content:
+			'{"type":"blocks","blocks":[{"type":"p","text":"Pondok Pesantren Mambaul Hikmah terus berkomitmen menyelenggarakan pendidikan terpadu yang memadukan kedalaman ilmu agama dengan adab dan akhlakul karimah."}]}',
+		thumbnail:
+			'https://smart.mambaulhikmah.com/storage/blogs/thumbnails/e3d517c1-96b6-4cdb-984f-31d70e7df53a.webp',
+		category: 'Keasramaan',
+		author: 'Tim Media MH',
+		created_at: '2026-06-25T23:51:27.000000Z',
+	},
+];
+
 async function fetchJson<T>(path: string): Promise<T | null> {
 	try {
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 6000);
 		const response = await fetch(`${API_BASE}${path}`, {
 			headers: {
 				Accept: 'application/json',
 			},
+			signal: controller.signal,
 		});
+		clearTimeout(timeoutId);
 
 		if (!response.ok) return null;
 		return (await response.json()) as T;
@@ -156,11 +191,31 @@ export async function getBlogs(params: BlogListParams = {}) {
 		search.set('category', params.category);
 	}
 
-	return (await fetchJson<BlogPagination>(`/blog?${search.toString()}`)) ?? emptyPagination(params);
+	const res = await fetchJson<BlogPagination>(`/blog?${search.toString()}`);
+	if (res && res.data && res.data.length > 0) {
+		return res;
+	}
+
+	const page = params.page ?? 1;
+	const perPage = params.perPage ?? 10;
+	const start = (page - 1) * perPage;
+	const paginatedData = FALLBACK_BLOGS.slice(start, start + perPage);
+
+	return {
+		data: paginatedData.length > 0 ? paginatedData : FALLBACK_BLOGS,
+		current_page: page,
+		last_page: Math.max(1, Math.ceil(FALLBACK_BLOGS.length / perPage)),
+		per_page: perPage,
+		total: FALLBACK_BLOGS.length,
+	};
 }
 
 export async function getLatestBlogs(limit = 3) {
-	return (await fetchJson<BlogPost[]>(`/blog?limit=${limit}`)) ?? [];
+	const res = await fetchJson<BlogPost[]>(`/blog?limit=${limit}`);
+	if (res && Array.isArray(res) && res.length > 0) {
+		return res;
+	}
+	return FALLBACK_BLOGS.slice(0, limit);
 }
 
 export async function getAllBlogs() {
@@ -172,9 +227,16 @@ export async function getAllBlogs() {
 		blogs.push(...nextPage.data);
 	}
 
+	if (blogs.length === 0) {
+		return FALLBACK_BLOGS;
+	}
+
 	return blogs;
 }
 
 export async function getBlogBySlug(slug: string) {
-	return await fetchJson<BlogPost>(`/blog/${encodeURIComponent(slug)}`);
+	const res = await fetchJson<BlogPost>(`/blog/${encodeURIComponent(slug)}`);
+	if (res) return res;
+	return FALLBACK_BLOGS.find((b) => b.slug === slug) ?? FALLBACK_BLOGS[0];
 }
+

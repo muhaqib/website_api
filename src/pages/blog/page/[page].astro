@@ -6,9 +6,10 @@ import { getBlogs, type BlogPagination } from '../../../lib/blogApi';
 
 export const getStaticPaths = (async () => {
 	const firstPage = await getBlogs({ page: 1, perPage: 9 });
+	const totalPages = Math.max(firstPage.last_page, 1);
 
-	return Array.from({ length: Math.max(firstPage.last_page - 1, 0) }, (_, index) => {
-		const page = index + 2;
+	return Array.from({ length: totalPages }, (_, index) => {
+		const page = index + 1;
 
 		return {
 			params: { page: String(page) },
