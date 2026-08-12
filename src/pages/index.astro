@@ -121,13 +121,13 @@ const latestBlogs = await getLatestBlogs(3);
 								<polyline points="12 5 19 12 12 19"></polyline>
 							</svg>
 						</a>
-						<a class="btn btn-hero-secondary" href="#profil">
+						<button type="button" class="btn btn-hero-secondary" id="open-video-btn" aria-label="Tonton Video Profil Pesantren">
 							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 								<circle cx="12" cy="12" r="10"></circle>
 								<polygon points="10 8 16 12 10 16 10 8"></polygon>
 							</svg>
 							<span>Jelajahi Profil</span>
-						</a>
+						</button>
 					</div>
 				</div>
 
@@ -502,6 +502,47 @@ const latestBlogs = await getLatestBlogs(3);
 			}
 
 			updateLatestBlogsHome();
+
+			function initVideoModal() {
+				const openBtn = document.getElementById('open-video-btn');
+				const closeBtn = document.getElementById('close-video-btn');
+				const backdrop = document.getElementById('video-modal-backdrop');
+				const modal = document.getElementById('video-modal');
+				const iframe = document.getElementById('youtube-iframe') as HTMLIFrameElement | null;
+
+				if (!openBtn || !modal || !iframe) return;
+
+				function openModal() {
+					const dataSrc = iframe?.getAttribute('data-src');
+					if (iframe && dataSrc) {
+						iframe.src = dataSrc;
+					}
+					modal?.classList.add('active');
+					modal?.setAttribute('aria-hidden', 'false');
+					document.body.style.overflow = 'hidden';
+				}
+
+				function closeModal() {
+					modal?.classList.remove('active');
+					modal?.setAttribute('aria-hidden', 'true');
+					if (iframe) {
+						iframe.src = '';
+					}
+					document.body.style.overflow = '';
+				}
+
+				openBtn.addEventListener('click', openModal);
+				closeBtn?.addEventListener('click', closeModal);
+				backdrop?.addEventListener('click', closeModal);
+
+				document.addEventListener('keydown', (e) => {
+					if (e.key === 'Escape' && modal?.classList.contains('active')) {
+						closeModal();
+					}
+				});
+			}
+
+			initVideoModal();
 		</script>
 
 		<!-- CALL TO ACTION (CTA) BANNER -->
@@ -516,12 +557,6 @@ const latestBlogs = await getLatestBlogs(3);
 							Dapatkan kemudahan informasi pendaftaran, konsultasi pemilihan unit pendidikan, dan info kunjungan pondok secara langsung melalui Sekretariat Admin.
 						</p>
 						<div class="cta-actions">
-							<a href="https://wa.me/6281393750612?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20Pondok%20Pesantren%20Mambaul%20Hikmah." target="_blank" rel="noreferrer" class="btn btn-gold">
-								<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-									<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-								</svg>
-								<span>Hubungi WhatsApp Admin</span>
-							</a>
 							<a href="/info-pendaftaran" class="btn btn-outline-light">
 								<span>Informasi Pendaftaran</span>
 							</a>
@@ -530,6 +565,33 @@ const latestBlogs = await getLatestBlogs(3);
 				</div>
 			</div>
 		</section>
+		<!-- ELEGANT VIDEO PROFIL MODAL -->
+		<div id="video-modal" class="video-modal" aria-hidden="true">
+			<div class="video-modal-backdrop" id="video-modal-backdrop"></div>
+			<div class="video-modal-dialog">
+				<button type="button" class="video-modal-close" id="close-video-btn" aria-label="Tutup Video">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
+				<div class="video-modal-header">
+					<span class="video-modal-badge">Video Profil Pesantren</span>
+					<h3>Pondok Pesantren Mambaul Hikmah Tegalwangi</h3>
+				</div>
+				<div class="video-wrapper">
+					<iframe
+						id="youtube-iframe"
+						src=""
+						data-src="https://www.youtube.com/embed/4YVCKgbmCjs?autoplay=1&rel=0&enablejsapi=1"
+						title="Profil Pondok Pesantren Mambaul Hikmah Tegalwangi"
+						frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						allowfullscreen
+					></iframe>
+				</div>
+			</div>
+		</div>
 	</main>
 </Layout>
 
@@ -1539,6 +1601,131 @@ const latestBlogs = await getLatestBlogs(3);
 		.section-header.flex-header {
 			flex-direction: column;
 			align-items: flex-start;
+		}
+	}
+
+	/* ELEGANT VIDEO POPUP MODAL STYLES */
+	.video-modal {
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20px;
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.35s ease, visibility 0.35s ease;
+	}
+
+	.video-modal.active {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.video-modal-backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(1, 24, 23, 0.88);
+		backdrop-filter: blur(14px);
+		cursor: pointer;
+	}
+
+	.video-modal-dialog {
+		position: relative;
+		z-index: 2;
+		width: 100%;
+		max-width: 920px;
+		background: #002e2d;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 28px;
+		overflow: hidden;
+		box-shadow:
+			0 25px 60px -15px rgba(0, 0, 0, 0.7),
+			0 0 40px rgba(0, 103, 102, 0.3);
+		transform: scale(0.92) translateY(20px);
+		transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.video-modal.active .video-modal-dialog {
+		transform: scale(1) translateY(0);
+	}
+
+	.video-modal-close {
+		position: absolute;
+		top: 16px;
+		right: 16px;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.12);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		color: #ffffff;
+		cursor: pointer;
+		transition: all 0.25s ease;
+	}
+
+	.video-modal-close:hover {
+		background: #006766;
+		color: #ffffff;
+		transform: rotate(90deg) scale(1.08);
+	}
+
+	.video-modal-header {
+		padding: 22px 28px 16px;
+		background: linear-gradient(180deg, rgba(0, 48, 47, 0.9) 0%, rgba(0, 46, 45, 0.4) 100%);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	.video-modal-badge {
+		display: inline-block;
+		font-size: 0.72rem;
+		font-weight: 850;
+		color: #e5c158;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		margin-bottom: 4px;
+	}
+
+	.video-modal-header h3 {
+		margin: 0;
+		font-size: 1.15rem;
+		color: #ffffff;
+		font-weight: 800;
+	}
+
+	.video-wrapper {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		background: #000000;
+	}
+
+	.video-wrapper iframe {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	@media (max-width: 640px) {
+		.video-modal-dialog {
+			border-radius: 20px;
+		}
+
+		.video-modal-header {
+			padding: 16px 18px 12px;
+		}
+
+		.video-modal-close {
+			top: 12px;
+			right: 12px;
+			width: 38px;
+			height: 38px;
 		}
 	}
 </style>
