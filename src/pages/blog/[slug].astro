@@ -17,19 +17,26 @@ export const getStaticPaths = (async () => {
 		blogs.map((post) => getBlogBySlug(post.slug)),
 	);
 
-	return detailedBlogs
-		.filter((post): post is BlogPost => Boolean(post?.slug))
-		.map((post) => ({
+	const validPosts = detailedBlogs.filter((post): post is BlogPost => Boolean(post?.slug));
+
+	return validPosts.map((post, index) => {
+		const nextPost = validPosts[(index + 1) % validPosts.length];
+		return {
 			params: { slug: post.slug },
-			props: { blog: post },
-		}));
+			props: {
+				blog: post,
+				nextBlog: nextPost && nextPost.slug !== post.slug ? nextPost : null,
+			},
+		};
+	});
 }) satisfies GetStaticPaths;
 
 interface Props {
 	blog: BlogPost;
+	nextBlog?: BlogPost | null;
 }
 
-const { blog } = Astro.props;
+const { blog, nextBlog } = Astro.props;
 const thumbnail = getBlogImageUrl(blog?.thumbnail);
 const contentHtml = renderBlogContent(blog?.content);
 ---
@@ -66,6 +73,34 @@ const contentHtml = renderBlogContent(blog?.content);
 			)}
 
 			<div class="article-content" set:html={contentHtml} />
+
+			<footer class="article-footer-actions">
+				<a href="/" class="btn btn-action-secondary">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="19" y1="12" x2="5" y2="12"></line>
+						<polyline points="12 19 5 12 12 5"></polyline>
+					</svg>
+					<span>Kembali ke Beranda</span>
+				</a>
+
+				{nextBlog ? (
+					<a href={`/blog/${nextBlog.slug}`} class="btn btn-action-primary">
+						<span>Baca Artikel Lainnya</span>
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="5" y1="12" x2="19" y2="12"></line>
+							<polyline points="12 5 19 12 12 19"></polyline>
+						</svg>
+					</a>
+				) : (
+					<a href="/blog" class="btn btn-action-primary">
+						<span>Lihat Semua Artikel</span>
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="5" y1="12" x2="19" y2="12"></line>
+							<polyline points="12 5 19 12 12 19"></polyline>
+						</svg>
+					</a>
+				)}
+			</footer>
 		</article>
 	</main>
 </Layout>
@@ -197,5 +232,66 @@ const contentHtml = renderBlogContent(blog?.content);
 		max-width: 100%;
 		height: auto;
 		border-radius: 18px;
+	}
+
+	/* ARTICLE FOOTER ACTIONS (KIRI & KANAN) */
+	.article-footer-actions {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		margin-top: 40px;
+		padding-top: 28px;
+		border-top: 1px solid #e0ebeb;
+	}
+
+	.btn-action-primary,
+	.btn-action-secondary {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		padding: 14px 24px;
+		border-radius: 16px;
+		font-size: 0.92rem;
+		font-weight: 850;
+		text-decoration: none;
+		transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.btn-action-primary {
+		background: #004d4c;
+		color: #ffffff;
+		box-shadow: 0 8px 20px -6px rgba(0, 77, 76, 0.3);
+	}
+
+	.btn-action-primary:hover {
+		background: #003635;
+		transform: translateY(-2px);
+		box-shadow: 0 12px 24px -6px rgba(0, 77, 76, 0.4);
+	}
+
+	.btn-action-secondary {
+		background: #ffffff;
+		color: #004d4c;
+		border: 1.5px solid #d4e2e2;
+	}
+
+	.btn-action-secondary:hover {
+		background: #eef4f4;
+		border-color: #004d4c;
+		transform: translateY(-2px);
+	}
+
+	@media (max-width: 640px) {
+		.article-footer-actions {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.btn-action-primary,
+		.btn-action-secondary {
+			justify-content: center;
+			width: 100%;
+		}
 	}
 </style>
