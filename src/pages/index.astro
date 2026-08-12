@@ -1324,7 +1324,7 @@ const latestBlogs = await getLatestBlogs(3);
 		gap: 24px;
 	}
 
-	.blog-card {
+	.blog-grid :global(.blog-card) {
 		border-radius: 20px;
 		background: #ffffff;
 		border: 1px solid #e2ecec;
@@ -1334,30 +1334,30 @@ const latestBlogs = await getLatestBlogs(3);
 		transition: all 0.3s ease;
 	}
 
-	.blog-card:hover {
+	.blog-grid :global(.blog-card:hover) {
 		transform: translateY(-4px);
 		box-shadow: 0 16px 36px rgba(0, 77, 76, 0.08);
 	}
 
-	.blog-image-box {
+	.blog-grid :global(.blog-image-box) {
 		position: relative;
 		height: 200px;
 		overflow: hidden;
 		background: #eef4f4;
-
-		img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			transition: transform 0.4s ease;
-		}
 	}
 
-	.blog-card:hover .blog-image-box img {
+	.blog-grid :global(.blog-image-box img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.4s ease;
+	}
+
+	.blog-grid :global(.blog-card:hover .blog-image-box img) {
 		transform: scale(1.05);
 	}
 
-	.blog-placeholder {
+	.blog-grid :global(.blog-placeholder) {
 		width: 100%;
 		height: 100%;
 		display: flex;
@@ -1369,7 +1369,7 @@ const latestBlogs = await getLatestBlogs(3);
 		font-weight: 900;
 	}
 
-	.blog-date-badge {
+	.blog-grid :global(.blog-date-badge) {
 		position: absolute;
 		bottom: 12px;
 		left: 12px;
@@ -1382,14 +1382,14 @@ const latestBlogs = await getLatestBlogs(3);
 		font-weight: 700;
 	}
 
-	.blog-content {
+	.blog-grid :global(.blog-content) {
 		padding: 24px;
 		display: flex;
 		flex-direction: column;
 		flex: 1;
 	}
 
-	.blog-content h3 {
+	.blog-grid :global(.blog-content h3) {
 		font-size: 1.1rem;
 		font-weight: 800;
 		color: #003a39;
@@ -1397,7 +1397,7 @@ const latestBlogs = await getLatestBlogs(3);
 		margin: 0 0 10px;
 	}
 
-	.blog-content p {
+	.blog-grid :global(.blog-content p) {
 		font-size: 0.88rem;
 		color: #4a5c5c;
 		line-height: 1.6;
@@ -1405,7 +1405,7 @@ const latestBlogs = await getLatestBlogs(3);
 		flex: 1;
 	}
 
-	.read-more {
+	.blog-grid :global(.read-more) {
 		display: inline-flex;
 		align-items: center;
 		gap: 6px;
@@ -1413,10 +1413,10 @@ const latestBlogs = await getLatestBlogs(3);
 		font-size: 0.86rem;
 		font-weight: 800;
 		text-decoration: none;
+	}
 
-		svg {
-			transition: transform 0.2s ease;
-		}
+	.blog-grid :global(.read-more svg) {
+		transition: transform 0.2s ease;
 	}
 
 	.read-more:hover svg {
