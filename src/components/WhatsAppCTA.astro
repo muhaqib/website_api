@@ -1,13 +1,17 @@
 ---
+import { Image } from 'astro:assets';
+import whatsappIcon from '../assets/whatsapp.png';
+
 const phone = '+62 813-9375-0612';
 const href =
 	'https://wa.me/6281393750612?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20Pondok%20Pesantren%20Mambaul%20Hikmah.';
 ---
 
 <a class="whatsapp-cta" href={href} target="_blank" rel="noreferrer" aria-label={`Chat WhatsApp ${phone}`}>
-	<span class="wa-icon">WA</span>
+	<Image src={whatsappIcon} alt="WhatsApp" width={42} height={42} class="wa-icon-img" />
 	<span class="wa-text">
 		<small>Chat Admin</small>
+		<strong>WhatsApp</strong>
 	</span>
 </a>
 
@@ -20,7 +24,7 @@ const href =
 		display: inline-flex;
 		align-items: center;
 		gap: 12px;
-		padding: 10px 14px 10px 10px;
+		padding: 10px 16px 10px 10px;
 		border-radius: 999px;
 		background: rgba(0, 77, 76, 0.92);
 		color: #ffffff;
@@ -30,16 +34,12 @@ const href =
 		animation: waFloat 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both 420ms;
 	}
 
-	.wa-icon {
-		display: grid;
+	.wa-icon-img {
 		width: 42px;
 		height: 42px;
-		place-items: center;
+		object-fit: contain;
 		border-radius: 50%;
-		background: #25d366;
-		color: #ffffff;
-		font-size: 0.78rem;
-		font-weight: 950;
+		flex-shrink: 0;
 	}
 
 	.wa-text {

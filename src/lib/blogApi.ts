@@ -166,18 +166,24 @@ const FALLBACK_BLOGS: BlogPost[] = [
 async function fetchJson<T>(path: string): Promise<T | null> {
 	try {
 		const controller = new AbortController();
-		const timeoutId = setTimeout(() => controller.abort(), 6000);
-		const response = await fetch(`${API_BASE}${path}`, {
+		const timeoutId = setTimeout(() => controller.abort(), 15000);
+		const separator = path.includes('?') ? '&' : '?';
+		const url = `${API_BASE}${path}${separator}_t=${Date.now()}`;
+		const response = await fetch(url, {
 			headers: {
 				Accept: 'application/json',
+				'Cache-Control': 'no-cache, no-store, must-revalidate',
+				Pragma: 'no-cache',
 			},
+			cache: 'no-store',
 			signal: controller.signal,
 		});
 		clearTimeout(timeoutId);
 
 		if (!response.ok) return null;
 		return (await response.json()) as T;
-	} catch {
+	} catch (error) {
+		console.warn(`[blogApi] Fetch error for path ${path}:`, error);
 		return null;
 	}
 }

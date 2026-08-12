@@ -67,6 +67,77 @@ const getPageHref = (page: number) => page === 1 ? '/blog' : `/blog/page/${page}
 	)}
 </main>
 
+<script>
+	async function updateBlogArchive() {
+		const grid = document.querySelector('.blog-grid');
+		if (!grid) return;
+
+		try {
+			const res = await fetch(`https://smart.mambaulhikmah.com/api/blog?page=1&per_page=9&_t=${Date.now()}`, {
+				headers: { Accept: 'application/json' },
+				cache: 'no-store',
+			});
+			if (!res.ok) return;
+
+			const json = await res.json();
+			const posts = json?.data;
+			if (!Array.isArray(posts) || posts.length === 0) return;
+
+			function formatDate(value: string) {
+				if (!value) return '';
+				try {
+					return new Intl.DateTimeFormat('id-ID', {
+						day: 'numeric',
+						month: 'long',
+						year: 'numeric',
+					}).format(new Date(value));
+				} catch {
+					return '';
+				}
+			}
+
+			function getImageUrl(thumb: string | null) {
+				if (!thumb) return null;
+				if (thumb.startsWith('http://') || thumb.startsWith('https://')) return thumb;
+				return `https://smart.mambaulhikmah.com${thumb.startsWith('/') ? '' : '/'}${thumb}`;
+			}
+
+			const currentFirstTitle = grid.querySelector('.blog-card h2')?.textContent?.trim();
+			if (currentFirstTitle === posts[0].title.trim()) {
+				return;
+			}
+
+			grid.innerHTML = posts
+				.map((post: any) => {
+					const imgUrl = getImageUrl(post.thumbnail);
+					const dateStr = formatDate(post.created_at);
+					const metaText = dateStr + (post.category ? ` • ${post.category}` : '');
+
+					const imgHtml = imgUrl
+						? `<img src="${imgUrl}" alt="${post.title || ''}" loading="lazy" decoding="async" style="width: 100%; aspect-ratio: 16 / 10; object-fit: cover;" />`
+						: `<div class="blog-placeholder">MH</div>`;
+
+					return `
+						<article class="blog-card">
+							${imgHtml}
+							<div>
+								<span>${metaText}</span>
+								<h2>${post.title}</h2>
+								<p>${post.excerpt || ''}</p>
+								<a href="/blog/${post.slug}">Baca Selengkapnya</a>
+							</div>
+						</article>
+					`;
+				})
+				.join('');
+		} catch (e) {
+			console.warn('[BlogArchive] Live update check skipped:', e);
+		}
+	}
+
+	updateBlogArchive();
+</script>
+
 <style>
 	.page {
 		background: #f8fafa;
@@ -92,6 +163,7 @@ const getPageHref = (page: number) => page === 1 ? '/blog' : `/blog/page/${page}
 	h1 {
 		max-width: 820px;
 		margin: 0;
+		color: #ffffff;
 		font-family: Manrope, Inter, ui-sans-serif, system-ui, sans-serif;
 		font-size: clamp(2rem, 4vw, 3.5rem);
 		line-height: 1.08;
