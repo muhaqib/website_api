@@ -5,10 +5,27 @@ import logo from '../assets/logo.png';
 const pathname = Astro.url.pathname;
 
 const navItems = [
-	{ label: 'Beranda', href: '/' },
-	{ label: 'Blog & Berita', href: '/blog' },
-	{ label: 'Tentang Kami', href: '/tentang-kami' },
-	{ label: 'Info Pendaftaran', href: '/info-pendaftaran' },
+	{
+		label: 'Beranda',
+		href: '/',
+		icon: 'home',
+	},
+	{
+		label: 'Blog & Berita',
+		href: '/blog',
+		icon: 'blog',
+	},
+	{
+		label: 'Tentang Kami',
+		href: '/tentang-kami',
+		icon: 'about',
+	},
+	{
+		label: 'Info Pendaftaran',
+		href: '/info-pendaftaran',
+		icon: 'pendaftaran',
+		badge: 'PMB 2025',
+	},
 ];
 
 function isActive(href: string) {
@@ -17,6 +34,8 @@ function isActive(href: string) {
 	}
 	return pathname.startsWith(href);
 }
+
+const waHref = 'https://wa.me/6281393750612?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20Pondok%20Pesantren%20Mambaul%20Hikmah.';
 ---
 
 <header class="site-header">
@@ -53,54 +72,99 @@ function isActive(href: string) {
 		</div>
 
 		<button class="mobile-toggle" id="mobile-toggle" aria-label="Buka Menu Navigasi" aria-expanded="false">
-			<svg class="icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-				<line x1="4" y1="6" x2="20" y2="6"></line>
-				<line x1="4" y1="12" x2="20" y2="12"></line>
-				<line x1="4" y1="18" x2="20" y2="18"></line>
-			</svg>
-			<svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-				<line x1="18" y1="6" x2="6" y2="18"></line>
-				<line x1="6" y1="6" x2="18" y2="18"></line>
-			</svg>
+			<span class="hamburger-box">
+				<span class="hamburger-line line-1"></span>
+				<span class="hamburger-line line-2"></span>
+				<span class="hamburger-line line-3"></span>
+			</span>
 		</button>
 	</div>
 
-	<!-- Mobile Drawer -->
+	<!-- Mobile Drawer Overlay -->
 	<div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
 		<div class="drawer-backdrop" id="drawer-backdrop"></div>
-		<div class="drawer-content">
+		<div class="drawer-content" role="dialog" aria-modal="true" aria-label="Menu Navigasi Mobile">
+			
+			<!-- Drawer Header -->
 			<div class="drawer-header">
-				<div class="brand">
-					<Image src={logo} width={40} height={40} alt="" />
+				<a class="brand" href="/" id="drawer-brand">
+					<div class="logo-wrapper">
+						<Image src={logo} width={44} height={44} alt="Logo Pondok Pesantren Mambaul Hikmah" />
+					</div>
 					<div class="brand-text">
 						<strong>Mambaul Hikmah</strong>
-						<small>Pondok Pesantren</small>
+						<small>Pondok Pesantren • Tegal</small>
 					</div>
-				</div>
+				</a>
+				<button class="drawer-close-btn" id="drawer-close-btn" aria-label="Tutup Menu">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
 			</div>
+
+			<!-- Navigation Links -->
 			<nav class="mobile-nav">
 				{
-					navItems.map((item) => (
-						<a href={item.href} class={isActive(item.href) ? 'active' : ''}>
-							<span>{item.label}</span>
-							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<polyline points="9 18 15 12 9 6"></polyline>
-							</svg>
+					navItems.map((item, index) => (
+						<a 
+							href={item.href} 
+							class={`nav-item ${isActive(item.href) ? 'active' : ''}`}
+							style={`--i: ${index}`}
+						>
+							<div class="nav-item-content">
+								<span class="nav-icon">
+									{item.icon === 'home' && (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+											<polyline points="9 22 9 12 15 12 15 22"></polyline>
+										</svg>
+									)}
+									{item.icon === 'blog' && (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 12h8"></path>
+										</svg>
+									)}
+									{item.icon === 'about' && (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+										</svg>
+									)}
+									{item.icon === 'pendaftaran' && (
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+											<path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+										</svg>
+									)}
+								</span>
+								<span class="nav-label">{item.label}</span>
+							</div>
+
+							{item.badge ? (
+								<span class="nav-badge">{item.badge}</span>
+							) : (
+								<svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+									<polyline points="9 18 15 12 9 6"></polyline>
+								</svg>
+							)}
 						</a>
 					))
 				}
 			</nav>
+
+			<!-- Action Buttons Section -->
 			<div class="drawer-actions">
-				<a class="btn btn-primary btn-full" href="/info-pendaftaran">
-					<span>Daftar Santri Baru</span>
-				</a>
-				<a class="btn btn-ghost btn-full" href="https://smart.mambaulhikmah.com" target="_blank" rel="noreferrer">
+				<a class="btn btn-primary btn-full btn-pmb" href="https://smart.mambaulhikmah.com">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-						<polyline points="10 17 15 12 10 7"></polyline>
-						<line x1="15" y1="12" x2="3" y2="12"></line>
+						<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+						<path d="M6 12v5c3 3 9 3 12 0v-5"></path>
 					</svg>
-					<span>Login Portal SMART</span>
+					<span>LOGIN</span>
+					<svg class="arrow-right" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="5" y1="12" x2="19" y2="12"></line>
+						<polyline points="12 5 19 12 12 19"></polyline>
+					</svg>
 				</a>
 			</div>
 		</div>
@@ -111,6 +175,8 @@ function isActive(href: string) {
 	const toggleBtn = document.getElementById('mobile-toggle');
 	const drawer = document.getElementById('mobile-drawer');
 	const backdrop = document.getElementById('drawer-backdrop');
+	const closeBtn = document.getElementById('drawer-close-btn');
+	const navLinks = drawer?.querySelectorAll('a');
 
 	function toggleMenu(show?: boolean) {
 		const isOpened = drawer?.classList.contains('is-active');
@@ -132,7 +198,20 @@ function isActive(href: string) {
 	}
 
 	toggleBtn?.addEventListener('click', () => toggleMenu());
+	closeBtn?.addEventListener('click', () => toggleMenu(false));
 	backdrop?.addEventListener('click', () => toggleMenu(false));
+
+	navLinks?.forEach((link) => {
+		link.addEventListener('click', () => {
+			toggleMenu(false);
+		});
+	});
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && drawer?.classList.contains('is-active')) {
+			toggleMenu(false);
+		}
+	});
 </script>
 
 <style>
@@ -180,6 +259,7 @@ function isActive(href: string) {
 		background: linear-gradient(135deg, rgba(0, 77, 76, 0.08), rgba(212, 175, 55, 0.12));
 		padding: 4px;
 		transition: transform 0.3s ease;
+		flex-shrink: 0;
 	}
 
 	.brand:hover .logo-wrapper {
@@ -296,40 +376,71 @@ function isActive(href: string) {
 		display: none;
 		align-items: center;
 		justify-content: center;
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		border: none;
-		background: rgba(0, 77, 76, 0.08);
+		width: 44px;
+		height: 44px;
+		border-radius: 12px;
+		border: 1px solid rgba(0, 77, 76, 0.12);
+		background: rgba(0, 77, 76, 0.06);
 		color: #004d4c;
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.mobile-toggle:hover {
-		background: rgba(0, 77, 76, 0.15);
+		background: rgba(0, 77, 76, 0.12);
+		transform: scale(1.04);
 	}
 
-	.mobile-toggle .icon-close {
-		display: none;
+	.mobile-toggle:active {
+		transform: scale(0.95);
 	}
 
-	.mobile-toggle.is-active .icon-open {
-		display: none;
+	.hamburger-box {
+		position: relative;
+		width: 20px;
+		height: 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
 
-	.mobile-toggle.is-active .icon-close {
+	.hamburger-line {
 		display: block;
+		width: 100%;
+		height: 2.5px;
+		background-color: #004d4c;
+		border-radius: 4px;
+		transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+		transform-origin: center;
 	}
 
-	/* Mobile Drawer */
+	/* Active Hamburger Animation */
+	.mobile-toggle.is-active {
+		background: rgba(0, 77, 76, 0.15);
+		border-color: rgba(0, 77, 76, 0.25);
+	}
+
+	.mobile-toggle.is-active .line-1 {
+		transform: translateY(6.75px) rotate(45deg);
+	}
+
+	.mobile-toggle.is-active .line-2 {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+
+	.mobile-toggle.is-active .line-3 {
+		transform: translateY(-6.75px) rotate(-45deg);
+	}
+
+	/* Mobile Drawer Overlay */
 	.mobile-drawer {
 		position: fixed;
 		inset: 0;
-		z-index: 99;
+		z-index: 999;
 		visibility: hidden;
 		pointer-events: none;
-		transition: visibility 0.3s ease;
+		transition: visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.mobile-drawer.is-active {
@@ -340,11 +451,11 @@ function isActive(href: string) {
 	.drawer-backdrop {
 		position: absolute;
 		inset: 0;
-		background: rgba(10, 25, 25, 0.5);
-		backdrop-filter: blur(8px);
-		-webkit-backdrop-filter: blur(8px);
+		background: rgba(6, 28, 28, 0.65);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
 		opacity: 0;
-		transition: opacity 0.3s ease;
+		transition: opacity 0.35s ease;
 	}
 
 	.mobile-drawer.is-active .drawer-backdrop {
@@ -356,67 +467,273 @@ function isActive(href: string) {
 		top: 0;
 		right: 0;
 		bottom: 0;
-		width: min(85vw, 360px);
-		background: #ffffff;
-		padding: 24px;
+		width: min(88vw, 380px);
+		background: linear-gradient(180deg, #ffffff 0%, #f7faf9 100%);
+		padding: 24px 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 24px;
+		gap: 16px;
 		transform: translateX(100%);
-		transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-		box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
+		transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		box-shadow: -12px 0 40px rgba(0, 30, 30, 0.2);
+		border-top-left-radius: 28px;
+		border-bottom-left-radius: 28px;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
 	}
 
 	.mobile-drawer.is-active .drawer-content {
 		transform: translateX(0);
 	}
 
+	/* Drawer Header */
 	.drawer-header {
-		padding-bottom: 16px;
-		border-bottom: 1px solid #eef2f2;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-bottom: 14px;
+		border-bottom: 1px solid rgba(0, 77, 76, 0.08);
 	}
 
+	.drawer-close-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		border: 1px solid rgba(0, 77, 76, 0.1);
+		background: rgba(0, 77, 76, 0.05);
+		color: #004d4c;
+		cursor: pointer;
+		transition: all 0.25s ease;
+	}
+
+	.drawer-close-btn:hover {
+		background: rgba(0, 77, 76, 0.12);
+		transform: rotate(90deg);
+	}
+
+	/* PMB Announcement Banner */
+	.drawer-pmb-card {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 14px;
+		border-radius: 14px;
+		background: linear-gradient(135deg, rgba(200, 155, 60, 0.12), rgba(0, 77, 76, 0.06));
+		border: 1px solid rgba(200, 155, 60, 0.25);
+		color: #004d4c;
+		text-decoration: none;
+		font-size: 0.8rem;
+		font-weight: 700;
+		transition: transform 0.2s ease;
+	}
+
+	.drawer-pmb-card:hover {
+		transform: translateY(-1px);
+	}
+
+	.pulse-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background-color: #22c55e;
+		box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+		animation: pulseGreen 2s infinite;
+		flex-shrink: 0;
+	}
+
+	@keyframes pulseGreen {
+		0% {
+			box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+		}
+		70% {
+			box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+		}
+		100% {
+			box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+		}
+	}
+
+	.pmb-text {
+		flex: 1;
+	}
+
+	/* Navigation Items */
 	.mobile-nav {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		margin: 4px 0;
 		flex: 1;
 	}
 
-	.mobile-nav a {
+	.nav-item {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 14px 18px;
-		border-radius: 14px;
+		padding: 12px 16px;
+		border-radius: 16px;
 		color: #334141;
 		font-weight: 700;
-		font-size: 0.95rem;
+		font-size: 0.94rem;
 		text-decoration: none;
-		background: #f7f9f9;
-		transition: all 0.2s ease;
+		background: #ffffff;
+		border: 1px solid rgba(0, 77, 76, 0.05);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+		transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+		/* Stagger entrance */
+		opacity: 0;
+		transform: translateX(24px);
 	}
 
-	.mobile-nav a:hover,
-	.mobile-nav a.active {
-		background: linear-gradient(135deg, rgba(0, 77, 76, 0.08), rgba(212, 175, 55, 0.08));
+	.mobile-drawer.is-active .nav-item {
+		opacity: 1;
+		transform: translateX(0);
+		transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+		            transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+		            background 0.2s ease, border-color 0.2s ease;
+		transition-delay: calc(0.06s * var(--i));
+	}
+
+	.nav-item-content {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.nav-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 10px;
+		background: rgba(0, 77, 76, 0.06);
 		color: #004d4c;
-		padding-left: 22px;
+		transition: all 0.25s ease;
 	}
 
+	.nav-label {
+		color: #243030;
+		transition: color 0.2s ease;
+	}
+
+	.chevron-icon {
+		color: #94a3a8;
+		transition: transform 0.25s ease, color 0.25s ease;
+	}
+
+	.nav-badge {
+		padding: 3px 9px;
+		border-radius: 999px;
+		background: linear-gradient(135deg, #c89b3c, #e0b656);
+		color: #ffffff;
+		font-size: 0.72rem;
+		font-weight: 800;
+		letter-spacing: 0.02em;
+		box-shadow: 0 2px 6px rgba(200, 155, 60, 0.3);
+	}
+
+	/* Nav Item Hover & Active States */
+	.nav-item:hover {
+		background: #ffffff;
+		border-color: rgba(0, 77, 76, 0.15);
+		transform: translateX(4px);
+	}
+
+	.nav-item:hover .chevron-icon {
+		transform: translateX(3px);
+		color: #004d4c;
+	}
+
+	.nav-item:hover .nav-icon {
+		background: #004d4c;
+		color: #ffffff;
+	}
+
+	.nav-item.active {
+		background: linear-gradient(135deg, rgba(0, 77, 76, 0.09) 0%, rgba(200, 155, 60, 0.08) 100%);
+		border: 1px solid rgba(0, 77, 76, 0.2);
+		border-left: 4px solid #004d4c;
+	}
+
+	.nav-item.active .nav-label {
+		color: #004d4c;
+		font-weight: 800;
+	}
+
+	.nav-item.active .nav-icon {
+		background: #004d4c;
+		color: #ffffff;
+		box-shadow: 0 4px 10px rgba(0, 77, 76, 0.2);
+	}
+
+	/* Actions Section */
 	.drawer-actions {
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
-		padding-top: 16px;
-		border-top: 1px solid #eef2f2;
+		padding-top: 14px;
+		border-top: 1px solid rgba(0, 77, 76, 0.08);
 	}
 
-	.btn-full {
-		width: 100%;
-		height: 46px;
+	.btn-pmb {
+		position: relative;
+		overflow: hidden;
+		height: 48px;
+		gap: 10px;
+		font-size: 0.94rem;
 		border-radius: 14px;
-		font-size: 0.92rem;
+	}
+
+	.btn-pmb .arrow-right {
+		transition: transform 0.2s ease;
+	}
+
+	.btn-pmb:hover .arrow-right {
+		transform: translateX(4px);
+	}
+
+	.drawer-action-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+	}
+
+	.btn-grid {
+		height: 42px;
+		border-radius: 12px;
+		font-size: 0.82rem;
+		padding: 0 10px;
+	}
+
+	.btn-whatsapp {
+		background: rgba(37, 211, 102, 0.12);
+		color: #128c7e;
+		border: 1px solid rgba(37, 211, 102, 0.25);
+	}
+
+	.btn-whatsapp:hover {
+		background: #25d366;
+		color: #ffffff;
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+	}
+
+	/* Drawer Footer */
+	.drawer-footer {
+		text-align: center;
+		padding-top: 4px;
+	}
+
+	.drawer-footer p {
+		font-size: 0.75rem;
+		color: #6b7c7c;
+		font-weight: 600;
+		margin: 0;
 	}
 
 	@keyframes headerDrop {
@@ -461,3 +778,4 @@ function isActive(href: string) {
 		}
 	}
 </style>
+
